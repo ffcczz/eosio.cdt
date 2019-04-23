@@ -141,6 +141,7 @@ struct environment {
       if (root)
          find_path = "/usr/bin";
       if ( auto path = llvm::sys::findProgramByName(prog.c_str(), {find_path}) )
+          //执行命令函数
          std::system((*path+" "+args.str()).c_str());
       else
          return false;

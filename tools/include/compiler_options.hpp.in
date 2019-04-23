@@ -13,6 +13,7 @@
 #endif
 
 #ifndef ONLY_LD
+// OptionCategory  位置  eosio.cdt/eosio_llvm/include/llvm/Support/CommandLine.h
 static llvm::cl::OptionCategory EosioCompilerToolCategory("compiler options");
 #else
 static llvm::cl::OptionCategory EosioLdToolCategory("ld options");
@@ -354,6 +355,7 @@ static void GetCompDefaults(std::vector<std::string>& copts) {
    const char* eosio_apply_suff = "${CMAKE_SHARED_LIBRARY_SUFFIX}";
    std::string apply_lib;
    if (!fnative_opt) {
+       //emplace_back()和push_back()方法类似
       copts.emplace_back("--target=wasm32");
       copts.emplace_back("-ffreestanding");
       copts.emplace_back("-nostdlib");

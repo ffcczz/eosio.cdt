@@ -107,6 +107,7 @@ namespace eosio { namespace cdt {
    };
 }} // ns eosio::cdt
 
+//
 void generate(const std::vector<std::string>& base_options, std::string input, std::string contract_name, const std::vector<std::string>& resource_paths, bool abigen) {
    std::vector<std::string> options;
    options.push_back("eosio-cpp");
@@ -140,6 +141,7 @@ void generate(const std::vector<std::string>& base_options, std::string input, s
    for (size_t i=0; i < size; i++)
       new_argv[i] = options[i].c_str();
 
+   // EosioCompilerToolCategory 位置  eosio.cdt/tools/include/compiler_options.hpp.in
    CommonOptionsParser opts( size, new_argv, EosioCompilerToolCategory, 0 );
    ClangTool ctool(opts.getCompilations(), opts.getSourcePathList());
 
@@ -174,6 +176,7 @@ void generate(const std::vector<std::string>& base_options, std::string input, s
 int main(int argc, const char **argv) {
 
    // fix to show version info without having to have any other arguments
+   // 有-v参数则直接打印出版本信息然后退出
    for (int i=0; i < argc; i++) {
      if (argv[i] == std::string("-v")) {
        eosio::cdt::environment::exec_subprogram("clang-7", {"-v"});
@@ -181,10 +184,14 @@ int main(int argc, const char **argv) {
      }
    }
 
+   //设置版本打印信息
    cl::SetVersionPrinter([](llvm::raw_ostream& os) {
          os << COMPILER_NAME << " version " << "${VERSION_FULL}" << "\n";
    });
+   //解析命令行选项
    cl::ParseCommandLineOptions(argc, argv, std::string(COMPILER_NAME)+" (Eosio C++ -> WebAssembly compiler)");
+   //Options 结构位置 eosio.cdt/tools/include/compiler_options.hpp.in
+   // CreateOptions 根据配置生成各种编译选项
    Options opts = CreateOptions();
 
    std::vector<std::string> outputs;
@@ -192,6 +199,7 @@ int main(int argc, const char **argv) {
       for (auto input : opts.inputs) {
          std::vector<std::string> new_opts = opts.comp_options;
          SmallString<64> res;
+         //获取系统临时目录
          llvm::sys::path::system_temp_directory(true, res);
          std::string tmp_file = std::string(res.c_str())+"/"+llvm::sys::path::filename(input).str();
          std::string output;
