@@ -815,7 +815,7 @@ static Options CreateOptions(bool add_defaults=true) {
       agopts.emplace_back("-fno-elide-constructors");
    }
    if (fstrict_vtable_pointers_opt) {
-      copts.emplace_back("-fstrict-vtable-pointers");
+      copts.emplace_back("-fstrict-vtable-pointers");  //  Enable optimizations based on the strict rules for overwriting polymorphic C++ objects
       agopts.emplace_back("-fstrict-vtable-pointers");
    }
 #endif
@@ -831,9 +831,9 @@ static Options CreateOptions(bool add_defaults=true) {
       agresources.emplace_back(resource);
    }
    if (fnative_opt)
-      ldopts.emplace_back("-fnative");
+      ldopts.emplace_back("-fnative");  //  Compile and link for x86-64
    if (fuse_main_opt)
-      ldopts.emplace_back("-fuse-main");
+      ldopts.emplace_back("-fuse-main");  // Use main as entry
 #endif
    return {output_fn, inputs, link, abigen, pp_dir, abigen_output, abigen_contract, copts, ldopts, agopts, agresources, debug, fnative_opt};
 }
