@@ -145,8 +145,11 @@ static cl::list<std::string> resources(
      cl::ZeroOrMore,
      cl::cat(EosioCompilerToolCategory));
 static cl::opt<bool> abigen_opt(
+
     "abigen",
+    // desc构造函数只是在调用apply方法时将参数注入到opt中
     cl::desc("Generate ABI"),
+    // cat构造函数只是在调用apply方法时将EosioCompilerToolCategory注入到opt中
     cl::cat(EosioCompilerToolCategory));
 static cl::opt<std::string> abigen_output_opt(
     "abigen_output",
@@ -660,7 +663,7 @@ static Options CreateOptions(bool add_defaults=true) {
       copts.emplace_back("-finline-hint-functions");  // Inline functions which are (explicitly or implicitly) marked inline
    }
    if (fmerge_all_constants_opt) {
-      copts.emplace_back("-fmerge-all-constants");  // 
+      copts.emplace_back("-fmerge-all-constants");  //  Allow merging of constants  (eosio-cpp独有)
    }
    if (fstack_protector_all_opt) {
       copts.emplace_back("-fstack-protector-all");  // Force the usage of stack protectors for all functions
@@ -751,12 +754,19 @@ static Options CreateOptions(bool add_defaults=true) {
       if (inputs.size() == 1) {
          llvm::SmallString<256> fn  = llvm::sys::path::filename(inputs[0]);
          llvm::SmallString<256> fn2 = fn;
+         //std::cout << fn.str().str  << std::endl;
          llvm::sys::path::replace_extension(fn, ".wasm");
          //  output_fn即为  {输入文件名}.wasm 
+         std::string fnstr = fn.str();
          output_fn = fn.str();
+         std::cout << output_fn  << std::endl;
          llvm::SmallString<256> res;
          llvm::sys::path::system_temp_directory(true, res);
          ldopts.emplace_back(std::string(std::string(res.str())+"/"+std::string(fn2.str())+".o"));
+         std::cout << "inputs[0]  "  <<  inputs[0]  << "    fn  "  <<  fn.str() <<  "  output_fn  "  << output_fn 
+             <<  R"(std::string(std::string(res.str())+"/"+std::string(fn2.str())+".o"))"  
+             <<  std::string(std::string(res.str())+"/"+std::string(fn2.str())+".o")  << std::endl;
+
       } else {
          ldopts.emplace_back("a.out");
       }
@@ -794,7 +804,7 @@ static Options CreateOptions(bool add_defaults=true) {
 #ifndef ONLY_LD
 #ifdef CPP_COMP
    if (! std_opt.empty()) {
-      copts.emplace_back("--std="+std_opt);
+      copts.emplace_back("--std="+std_opt);  //  -std=<string>  :   Language standard to compile for
       agopts.emplace_back("--std="+std_opt);
    } else {
       copts.emplace_back("--std=c++17");
@@ -807,7 +817,7 @@ static Options CreateOptions(bool add_defaults=true) {
       agopts.emplace_back("-faligned-allocation");
    }
    if (fcoroutine_ts_opt) {
-      copts.emplace_back("-fcoroutine-ts");
+      copts.emplace_back("-fcoroutine-ts");     // Enable support for the C++ Coroutines TS (eosio-cpp 独有)
       agopts.emplace_back("-fcoroutine-ts");
    }
    if (fno_elide_constructors_opt) {

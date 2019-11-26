@@ -427,6 +427,8 @@ namespace eosio { namespace cdt {
                   llvm::sys::path::system_temp_directory(true, res);
 
                   std::ofstream out(std::string(res.c_str())+"/"+llvm::sys::path::filename(main_fe->getName()).str());
+
+                  
                   for (auto inc : global_includes[main_file]) {
                      visitor->get_rewriter().ReplaceText(inc.range,
                            std::string("\"")+inc.file_name+"\"\n");

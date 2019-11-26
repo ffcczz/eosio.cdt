@@ -87,14 +87,15 @@ if [ $(( $(git submodule status --recursive | grep -c "^[+\-]") )) -gt 0 ]; then
    exit 1
 fi
 
-mkdir -p build
-pushd build &> /dev/null
+#mkdir -p build
+mkdir -p buildnew
+pushd buildnew &> /dev/null
 
 if [ -z "$CMAKE" ]; then
   CMAKE=$( command -v cmake )
 fi
 
-"$CMAKE" -DCMAKE_INSTALL_PREFIX=/usr/local/eosio.cdt ../
+"$CMAKE" -DCMAKE_INSTALL_PREFIX=/usr/local/eosio.cdtnew ../
 if [ $? -ne 0 ]; then
    exit -1;
 fi

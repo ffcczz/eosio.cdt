@@ -30,6 +30,7 @@ endif()
 macro (add_native_library TARGET)
    add_library( ${TARGET} ${ARGN} )
    target_compile_options( ${TARGET} PUBLIC -fnative )
+   message("add_native_library compile_options ${TARGET}")
 endmacro()
 
 macro (add_native_executable TARGET)

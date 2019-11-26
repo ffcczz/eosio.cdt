@@ -188,10 +188,10 @@ int main(int argc, const char **argv) {
    cl::SetVersionPrinter([](llvm::raw_ostream& os) {
          os << COMPILER_NAME << " version " << "${VERSION_FULL}" << "\n";
    });
-   //解析命令行选项
+   //解析命令行选项   此处为调用llvm下面eosio_llvm/lib/Support/CommandLine.cpp中的方法，预编译应该不是在此处进行
    cl::ParseCommandLineOptions(argc, argv, std::string(COMPILER_NAME)+" (Eosio C++ -> WebAssembly compiler)");
    //Options 结构位置 eosio.cdt/tools/include/compiler_options.hpp.in
-   // CreateOptions 根据配置生成各种编译选项
+   // CreateOptions 根据配置生成各种编译选项   预编译应该是在此处进行
    Options opts = CreateOptions();
 
    std::vector<std::string> outputs;
